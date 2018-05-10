@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Salary Prediction</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="/static/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Kaushan+Script" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/static/css/mystyle.css">
+    
+    <style>
+    #loader {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 1;
+      width: 150px;
+      height: 150px;
+      margin: -75px 0 0 -75px;
+      border: 16px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 16px solid #3498db;
+      width: 120px;
+      height: 120px;
+      -webkit-animation: spin 2s linear infinite;
+      animation: spin 2s linear infinite;
+    }
+    
+    @-webkit-keyframes spin {
+      0% { -webkit-transform: rotate(0deg); }
+      100% { -webkit-transform: rotate(360deg); }
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    
+    .animate-bottom {
+      position: relative;
+      -webkit-animation-name: animatebottom;
+      -webkit-animation-duration: 1s;
+      animation-name: animatebottom;
+      animation-duration: 1s
+    }
+    
+    @-webkit-keyframes animatebottom {
+      from { bottom:-100px; opacity:0 } 
+      to { bottom:0px; opacity:1 }
+    }
+    
+    @keyframes animatebottom { 
+      from{ bottom:-100px; opacity:0 } 
+      to{ bottom:0; opacity:1 }
+    }
+    
+    #myDiv {
+      display: none;
+      
+      
+    }
+    #myProgress {
+    width: 100%;
+    background-color: grey;
+}
+#myBar {
+    width: 1%;
+    height: 30px;
+    background-color:#564278;
+}
+body{
+     background:linear-gradient(rgba(196, 102, 0, 0.6), rgba(155, 89, 182, 0.6));
+     }
+</style>
+
+            
+    <head>
+<body  onload="my()" style="margin:0;">
+
+
+<div id="loader"></div>
+
+<div style="display:none;" id="myDiv" class="animate-bottom">
+<div class="form-group" style="float:right; width:45%;margin-top:20%;padding-bottom:20%;">
+<h1 class = "section-heading">
+{% if name != '' %}    
+Hey  {{ name }} !!
+{% endif %}
+
+</h2>
+<br><br>
+<h3 class="section-heading">
+            
+            Your chances for getting salary more than 50,000 are:-
+           {% if val != '' %}
+               <h1>{{ val }} % </h1>
+            {% endif %}
+</h3>
+            
+    <div id="myProgress" >
+          <div id="myBar"></div>
+    </div>                
+        
+
+</div>  
+
+
+<div class="container" style="width:50%; float:left; padding-top:50px;">
+
+  <h2>Salary Prediction Application</h2>
+  <h6>Fill these up and get your % of chances of salary less or more than  50K </h6>
+  <hr>
+  <br>
+  
+  
+  <br>
+  
+  <form action="/predict" method="Post" id="salary_form">
+  <div class="form-group">
+      <label for="Name">Enter your name:</label>
+      <input type="text" class="form-control" id="name"  placeholder="Enter Name" name="name">
+    </div>
+    
+  <div class="form-group">
+      <label for="Age">Age:</label>
+      <input type="number" class="form-control" id="age" min ="1" max="75" placeholder="Enter Age" name="age" required>
+    </div>
+  
+    <div class="form-group">
+  <label for="WorkClass">Work Class:</label>
+  <select class="form-control" id="sel1" name ="workClass" required>
+    <option>Private</option>
+    <option>Local-gov</option>
+    <option>Self-emp-not-inc</option>
+    <option>Federal-gov</option>
+    <option>State-gov</option>
+    <option>Self-emp-inc</option>
+    <option>Without-pay</option>
+    
+  </select>
+</div>
+    <div class="form-group">
+          <label for="fnlwgt">Final Sampling Weight:</label>
+          <input type="number" class="form-control" min ="0" max = "30000" id="pwd" placeholder="Enter fnlwgt" name="fnlwgt" required>
+          <a href = "https://www.quora.com/What-is-the-meaning-of-capital-gain-capital-loss-and-fnlwgt-in-adult-dataset-from-UCI" >for more about fnlwgt click here </a>
+    </div>
+    
+    <div class="form-group">
+      <label for="MaritialStatus">Maritial Status:</label>
+      <select class="form-control" id="sel1" name = "MaritialStatus" required>
+        <option>Married</option>
+        <option>Un-Married</option>
+      </select>
+    </div>
+    
+ <div class="form-group">
+  <label for="Occupation">Occupation:</label>
+  <select class="form-control" id="sel1" name = "Occupation" required>
+    <option>Prof-specialty</option>
+    <option>Exec-managerial</option>
+    <option>Tech-support</option>
+    <option>Armed-Forces</option>
+    <option>Sales	</option>
+    <option>Protective-serv</option>
+    <option>Adm-clerical</option>
+    <option>Craft-repair</option>
+    <option>Transport-moving</option>
+    <option>Farming-fishing</option>
+    <option>Handlers-cleaners</option>
+    <option>Machine-op-inspct</option>
+    <option>Priv-house-serv</option>    
+    <option>Other-service</option>
+  </select>
+ </div>
+ <div class="form-group">
+  <label for="Relationship">Relationship:</label>
+  <select class="form-control" id="sel1" name = "Relationship" required>
+    <option>Wife</option>
+    <option>Not-in-family</option>
+    <option>Husband</option>
+    <option>Unmarried</option>
+    <option>Own-child</option>
+    <option>Other-relative</option>
+  </select>
+</div>
+<div class="form-group">
+  <label for="Race">Race:</label>
+  <select class="form-control" id="sel1" name = "Race" required>
+    <option>Asian-Pac-Islander</option>
+    <option>White</option>
+    <option>Black</option>
+    <option>Amer-Indian-Eskimo</option>
+    <option>Other</option>
+   </select>
+</div>
+
+<div class="form-group">
+  <label for="Gender">Gender:</label>
+  <select class="form-control" id="sel1" name = "Gender" required>
+    <option>Male</option>
+    <option>Female</option>    
+   </select>
+</div>
+ 
+     <div class="form-group">
+      <label for="Capital Gain">Capital Gain:</label>
+      <input type="number" class="form-control" min ="0" max="120" id="pwd" placeholder="Enter Capital Gain" name="CapitalGain" required>
+      <a href = "https://www.quora.com/What-is-the-meaning-of-capital-gain-capital-loss-and-fnlwgt-in-adult-dataset-from-UCI" >for more about Capital Gain click here </a>
+    </div>
+     <div class="form-group">
+      <label for="CapitalLoss">Capital Loss:</label>
+      <input type="number" class="form-control" min ="0" max="120" id="pwd" placeholder="Enter Capital Loss" name="CapitalLoss" required>
+      <a href = "https://www.quora.com/What-is-the-meaning-of-capital-gain-capital-loss-and-fnlwgt-in-adult-dataset-from-UCI" >for more about Capital Loss click here </a>
+    </div>
+    <div class="form-group">
+  <label for="Education">Education:</label>
+  <select class="form-control" id="sel1" name = "education" required>
+    <option>Preschool</option>
+    <option>1st-4th</option>
+    <option>5th-6th</option>
+    <option>7th-8th</option>
+    <option>9th</option>
+    <option>10th</option>
+    <option>11th</option>
+    <option>12th</option>
+    <option>HS-grad</option>
+    <option>Some-college</option>
+    <option>Assoc-voc</option>
+    <option>Assoc-acdm</option>
+    <option>Bachelors</option>    
+    <option>Masters</option>
+    <option>Prof-school</option>
+    <option>Doctorate</option>
+  </select>
+ </div>
+    
+    
+    <div class="form-group">
+      <label for="HoursperWeek">Hours-per-Week:</label>
+      <input type="number" class="form-control" min ="0" id="pwd" placeholder="Enter Hours per Week" name="HoursperWeek" required>
+      </div>
+    
+
+     <button type="submit"  style="float:left;" class="btn btn-default">Submit</button>
+    <input style="float:right;" type="reset"  class="btn btn-default">
+  </form>
+  
+  
+    
+  </div>
+  <footer style = "clear:both;width:100%;  ">
+      <div class="container" width:50%;margin-top:80px;">
+        <div class="row" style="padding-left:400px;">
+          <div class="col-md-4">
+            <span class="copyright">Copyright &copy; Vishal </span>
+          </div>
+          <div class="col-md-4">
+            <ul class="list-inline social-buttons">
+              
+              <li class="list-inline-item">
+                <a href="https://github.com/vishalrana16/">
+                  <i class="fa fa-github"></i>
+                </a>
+              </li>
+              <li class="list-inline-item">
+                <a href="https://www.linkedin.com/in/vishal-rana-7b016a141/">
+                  <i class="fa fa-linkedin"></i>
+                </a>
+              </li>
+            </ul>
+          </div>          
+        </div>
+      </div>
+    </footer>
+  
+  <script src="/static/vendor/jquery/jquery.min.js"></script>
+    <script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script src="/static/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <script src="/static/js/jqBootstrapValidation.js"></script>
+    <script>
+    
+    function my(){
+            myFunction();
+            move();
+            
+            
+            }
+        var myVar;
+        
+        function myFunction() {
+            myVar = setTimeout(showPage, 3000);
+        }
+        
+        function showPage() {
+          document.getElementById("loader").style.display = "none";
+          document.getElementById("myDiv").style.display = "block";
+        }
+        function move() {
+            var elem = document.getElementById("myBar"); 
+            var width = 1;
+            var id = setInterval(frame, 10);
+            function frame() {
+                if (width >= {{ val }}) {
+                    clearInterval(id);
+                } else {
+                    width++; 
+                    elem.style.width = width + '%'; 
+                }
+            }
+        }
+
+</script>
+
+</body>
+</html>
+
+
+
